@@ -1,0 +1,37 @@
+
+grafana:
+  ingress:
+    enabled: true
+    hosts: ["your.host.com"]
+
+  persistence:
+    enable: true
+  
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://monitoring-prometheus-server.monitoring.svc.cluster.local
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'default'
+          folder: ''
+          type: file
+          disableDeletion: true
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+
+  dashboards:
+    default:
+      prometheus-stats:
+        # Ref: https://grafana.com/dashboards/1860
+        gnetId: 1860
+        revision: 22
+        datasource: Prometheus
